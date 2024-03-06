@@ -19,7 +19,7 @@ export default function EmployeeTabs() {
 
   useEffect(() => {
     router.replace(`?tab=${selectedTab}`);
-  }, [selectedTab]);
+  }, [selectedTab, router]);
 
   return (
     <>
