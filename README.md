@@ -1,6 +1,6 @@
-# Khairi CTOS Assignment
+# Khairi Employee Management System
 
-[demo](https://khairimusa.github.io/khairi-employee-management-system/)
+- Employee management system demo
 
 ## Installation
 
