@@ -37,85 +37,6 @@ import {
 } from "@/components/new-york/ui/avatar";
 import useStore, { Employee } from "@/store";
 
-export const columns: ColumnDef<Employee>[] = [
-  {
-    accessorKey: "avatar",
-    header: "Avatar",
-    cell: ({ row }) => (
-      <div>
-        <Avatar>
-          <AvatarImage src={row.getValue("avatar")} alt="@shadcn" />
-          <AvatarFallback>N/A</AvatarFallback>
-        </Avatar>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "full_name",
-    header: () => <div className="text-left">Full Name</div>,
-    cell: ({ row }) => (
-      <div className="truncate max-w-[190px]">{row.getValue("full_name")}</div>
-    ),
-  },
-  {
-    accessorKey: "salary",
-    header: () => <div className="text-left">Salary</div>,
-    cell: ({ row }) => <div>RM {row.getValue("salary")}</div>,
-  },
-  {
-    accessorKey: "age",
-    header: () => <div className="text-left">Age</div>,
-    cell: ({ row }) => <div>{row.getValue("age")}</div>,
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    header: () => <div className="text-right">Actions</div>,
-    cell: ({ row }) => {
-      const store = useStore((state) => state);
-      const employee = row.original;
-      return (
-        <div className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>View</DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  store.removeEmployee(employee.id);
-                }}
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  },
-];
-
 export default function EmployeeListTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -123,12 +44,9 @@ export default function EmployeeListTable() {
   );
   const store = useStore((state) => state);
   const data = store.employees;
-  const fethEmployess = async (page?: string) => {
-    const baseUrl = new URL(`https://reqres.in/api/users`);
 
-    if (page) {
-      baseUrl.searchParams.set("page", page);
-    }
+  const fetchEmployees = async () => {
+    const baseUrl = new URL(`https://reqres.in/api/users`);
 
     try {
       if (store.employees.length !== 0) return; // need to remove this to use locale storage as store
@@ -173,8 +91,88 @@ export default function EmployeeListTable() {
     }
   };
 
+  const columns: ColumnDef<Employee>[] = [
+    {
+      accessorKey: "avatar",
+      header: "Avatar",
+      cell: ({ row }) => (
+        <div>
+          <Avatar>
+            <AvatarImage src={row.getValue("avatar")} alt="@shadcn" />
+            <AvatarFallback>N/A</AvatarFallback>
+          </Avatar>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Email
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("email")}</div>
+      ),
+    },
+    {
+      accessorKey: "full_name",
+      header: () => <div className="text-left">Full Name</div>,
+      cell: ({ row }) => (
+        <div className="truncate max-w-[190px]">
+          {row.getValue("full_name")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "salary",
+      header: () => <div className="text-left">Salary</div>,
+      cell: ({ row }) => <div>RM {row.getValue("salary")}</div>,
+    },
+    {
+      accessorKey: "age",
+      header: () => <div className="text-left">Age</div>,
+      cell: ({ row }) => <div>{row.getValue("age")}</div>,
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      header: () => <div className="text-right">Actions</div>,
+      cell: ({ row }) => {
+        const employee = row.original;
+        return (
+          <div className="text-right">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <DotsHorizontalIcon className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>View</DropdownMenuItem>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => store.removeEmployee(employee.id)}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+    },
+  ];
+
   React.useEffect(() => {
-    fethEmployess();
+    fetchEmployees();
   }, []);
 
   const table = useReactTable({
