@@ -35,16 +35,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/new-york/ui/avatar";
+import useStore, { Employee } from "@/store";
 
-export type Payment = {
-  id: string | number;
-  avatar: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "avatar",
     header: "Avatar",
@@ -73,22 +66,29 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "first_name",
-    header: () => <div className="text-left">First Name</div>,
-    cell: ({ row }) => <div>{row.getValue("first_name")}</div>,
+    accessorKey: "full_name",
+    header: () => <div className="text-left">Full Name</div>,
+    cell: ({ row }) => (
+      <div className="truncate max-w-[190px]">{row.getValue("full_name")}</div>
+    ),
   },
   {
-    accessorKey: "last_name",
-    header: () => <div className="text-left">Last Name</div>,
-    cell: ({ row }) => <div>{row.getValue("last_name")}</div>,
+    accessorKey: "salary",
+    header: () => <div className="text-left">Salary</div>,
+    cell: ({ row }) => <div>RM {row.getValue("salary")}</div>,
+  },
+  {
+    accessorKey: "age",
+    header: () => <div className="text-left">Age</div>,
+    cell: ({ row }) => <div>{row.getValue("age")}</div>,
   },
   {
     id: "actions",
     enableHiding: false,
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
-      const payment = row.original;
-
+      const store = useStore((state) => state);
+      const employee = row.original;
       return (
         <div className="text-right">
           <DropdownMenu>
@@ -101,7 +101,13 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuItem>View</DropdownMenuItem>
               <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  store.removeEmployee(employee.id);
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -115,9 +121,8 @@ export default function EmployeeListTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-
-  const [data, setData] = React.useState([]);
-
+  const store = useStore((state) => state);
+  const data = store.employees;
   const fethEmployess = async (page?: string) => {
     const baseUrl = new URL(`https://reqres.in/api/users`);
 
@@ -126,14 +131,32 @@ export default function EmployeeListTable() {
     }
 
     try {
+      if (store.employees.length !== 0) return; // need to remove this to use locale storage as store
+
       const res = await fetch(baseUrl);
+
       if (!res.ok) {
         throw new Error("Something went wrong", {
           cause: res,
         });
       }
-      const { data, total, page, per_page, total_pages } = await res.json();
-      setData(data);
+
+      const { data } = await res.json();
+
+      const formatedData = data.map((item: any) => {
+        return {
+          id: item.id,
+          avatar: item.avatar,
+          first_name: item.first_name,
+          last_name: item.last_name,
+          full_name: `${item.first_name} ${item.last_name}`,
+          email: item.email,
+          salary: (Math.floor(Math.random() * 10000) + 5000).toLocaleString(),
+          age: Math.floor(Math.random() * 60) + 25,
+        };
+      });
+
+      await store.setEmployees(formatedData);
     } catch (err: any) {
       const httpStatus = err.cause?.res?.status;
 
@@ -227,26 +250,6 @@ export default function EmployeeListTable() {
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
       </div>
     </div>
   );
