@@ -1,0 +1,21 @@
+{
+  "landingPage": {
+    "metadata": {
+      "title": "Khairi Employee Management System",
+      "description": "Khairi Employee Management System"
+    }
+  },
+  "homePage": {
+    "title": "Employee Management System",
+    "filterEmployee": "Filter employees...",
+    "employeeList": "Employee List",
+    "edit": "Edit",
+    "add": "Add New",
+    "avatar": "Avatar",
+    "email": "Email",
+    "fullName": "Full Name",
+    "salary": "Salary",
+    "age": "Age",
+    "actions": "Actions"
+  }
+}

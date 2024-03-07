@@ -10,10 +10,12 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function EmployeeTabs() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations("homePage");
 
   const selectedTab = searchParams.get("tab") ?? "list";
 
@@ -27,17 +29,17 @@ export default function EmployeeTabs() {
         <TabsList className="w-full">
           <Link className="w-full" href={`/?tab=list`}>
             <TabsTrigger className="w-full" value="list">
-              Employee List
+              {t("employeeList")}
             </TabsTrigger>
           </Link>
           <Link className="w-full" href={`/?tab=edit`}>
             <TabsTrigger className="w-full" value="edit">
-              Edit
+              {t("edit")}
             </TabsTrigger>
           </Link>
           <Link className="w-full" href={`/?tab=add`}>
             <TabsTrigger className="w-full" value="add">
-              Add New
+              {t("add")}
             </TabsTrigger>
           </Link>
         </TabsList>
@@ -45,10 +47,10 @@ export default function EmployeeTabs() {
           <EmployeeListTable />
         </TabsContent>
         <TabsContent value="edit" className="space-y-4">
-          Edit
+          {t("edit")}
         </TabsContent>
         <TabsContent value="add" className="space-y-4">
-          Add New
+          {t("add")}
         </TabsContent>
       </Tabs>
     </>

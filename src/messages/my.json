@@ -1,0 +1,21 @@
+{
+  "landingPage": {
+    "metadata": {
+      "title": "Sistem Pengurusan Pekerja Khairi",
+      "description": "Sistem Pengurusan Pekerja Khairi"
+    }
+  },
+  "homePage": {
+    "title": "Sistem Pengurusan Pekerja",
+    "filterEmployee": "Tapis pekerja...",
+    "employeeList": "Senarai Pekerja",
+    "edit": "Sunting",
+    "add": "Tambah Pekerja",
+    "avatar": "Gambar",
+    "email": "Emel",
+    "fullName": "Nama Penuh",
+    "salary": "Gaji",
+    "age": "Umur",
+    "actions": "Pilihan"
+  }
+}

@@ -36,8 +36,10 @@ import {
   AvatarImage,
 } from "@/components/new-york/ui/avatar";
 import useStore, { Employee } from "@/store";
+import { useTranslations } from "next-intl";
 
 export default function EmployeeListTable() {
+  const t = useTranslations("homePage");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -94,7 +96,7 @@ export default function EmployeeListTable() {
   const columns: ColumnDef<Employee>[] = [
     {
       accessorKey: "avatar",
-      header: "Avatar",
+      header: () => <div className="text-left">{t("avatar")}</div>,
       cell: ({ row }) => (
         <div>
           <Avatar>
@@ -123,7 +125,7 @@ export default function EmployeeListTable() {
     },
     {
       accessorKey: "full_name",
-      header: () => <div className="text-left">Full Name</div>,
+      header: () => <div className="text-left">{t("fullName")}</div>,
       cell: ({ row }) => (
         <div className="truncate max-w-[190px]">
           {row.getValue("full_name")}
@@ -132,18 +134,18 @@ export default function EmployeeListTable() {
     },
     {
       accessorKey: "salary",
-      header: () => <div className="text-left">Salary</div>,
+      header: () => <div className="text-left">{t("salary")}</div>,
       cell: ({ row }) => <div>RM {row.getValue("salary")}</div>,
     },
     {
       accessorKey: "age",
-      header: () => <div className="text-left">Age</div>,
+      header: () => <div className="text-left">{t("age")}</div>,
       cell: ({ row }) => <div>{row.getValue("age")}</div>,
     },
     {
       id: "actions",
       enableHiding: false,
-      header: () => <div className="text-right">Actions</div>,
+      header: () => <div className="text-right">{t("actions")}</div>,
       cell: ({ row }) => {
         const employee = row.original;
         return (
@@ -194,7 +196,7 @@ export default function EmployeeListTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter employees..."
+          placeholder={t("filterEmployee")}
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)

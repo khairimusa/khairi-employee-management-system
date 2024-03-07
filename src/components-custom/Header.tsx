@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/default/ui/toggle-mode";
 import { UserNav } from "./UserNav";
-import LocaleSelector from "./LocaleSelector";
+import { LanguagePicker } from "./LanguagePicker";
 
 export default function Header() {
   return (
@@ -8,7 +8,7 @@ export default function Header() {
       <div className="flex h-16 items-center px-4">
         <UserNav />
         <div className="ml-auto flex items-center space-x-4">
-          <LocaleSelector />
+          <LanguagePicker />
           <ModeToggle />
         </div>
       </div>
