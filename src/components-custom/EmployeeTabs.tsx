@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { RegisterForm } from "./RegisterForm";
+import { UpdateForm } from "./EditForm";
 
 export default function EmployeeTabs() {
   const searchParams = useSearchParams();
@@ -47,10 +49,10 @@ export default function EmployeeTabs() {
           <EmployeeListTable />
         </TabsContent>
         <TabsContent value="edit" className="space-y-4">
-          {t("edit")}
+          <UpdateForm />
         </TabsContent>
         <TabsContent value="add" className="space-y-4">
-          {t("add")}
+          <RegisterForm />
         </TabsContent>
       </Tabs>
     </>
