@@ -72,7 +72,7 @@ export default function EmployeeListTable() {
           full_name: `${item.first_name} ${item.last_name}`,
           email: item.email,
           salary: (Math.floor(Math.random() * 10000) + 5000).toLocaleString(),
-          age: Math.floor(Math.random() * 60) + 25,
+          age: Math.floor(Math.random() * (60 - 18 + 1)) + 18,
         };
       });
 

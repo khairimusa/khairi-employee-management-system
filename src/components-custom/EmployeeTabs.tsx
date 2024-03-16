@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { RegisterForm } from "./RegisterForm";
-import { UpdateForm } from "./EditForm";
+import { UpdateForm } from "./UpdateForm";
 
 export default function EmployeeTabs() {
   const searchParams = useSearchParams();

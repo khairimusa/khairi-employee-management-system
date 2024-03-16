@@ -5,21 +5,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useStore from "@/store";
 
-import { useToast } from "@/components/new-york/ui/use-toast";
 import { Button } from "@/components/new-york/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/new-york/ui/alert-dialog";
-
-import { Icons } from "@/components/icons";
 
 import {
   Form,
@@ -39,9 +34,11 @@ import {
   CardTitle,
 } from "@/components/new-york/ui/card";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useEdgeStore } from "@/app/lib/edgestore";
 import { SingleImageDropzone } from "./SingleImageDropzone";
+import { Icons } from "@/components/icons";
+import { useToast } from "@/components/new-york/ui/use-toast";
 
 const FormSchema = z.object({
   avatar: z.union([z.literal(""), z.string().trim().url()]),
@@ -65,7 +62,7 @@ const FormSchema = z.object({
     .max(65, { message: "Age must be between 18 and 60" }),
 });
 
-export function RegisterForm() {
+export function UpdateForm() {
   const store = useStore((state) => state);
   const [loading, setLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -75,22 +72,36 @@ export function RegisterForm() {
     url: string;
     thumbnailUrl: string | null;
   }>();
-  const { edgestore } = useEdgeStore();
+
   const { toast } = useToast();
+
+  const { edgestore } = useEdgeStore();
+
+  useEffect(() => {
+    fetch(form.getValues("avatar"))
+      .then((res) => res.blob())
+      .then((blob) => {
+        setFile(new File([blob], "image", { type: blob.type }));
+      });
+  }, []);
+
+  const employeeId = 0;
+  const selectedEmployee = store.employees[employeeId];
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      avatar: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      salary: 1,
-      age: 0,
+      avatar: selectedEmployee.avatar,
+      first_name: selectedEmployee.first_name,
+      last_name: selectedEmployee.last_name,
+      email: selectedEmployee.email,
+      salary: selectedEmployee.salary,
+      age: selectedEmployee.age,
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    console.log(data);
     setLoading(true);
     if (!file) {
       setOpen(true);
@@ -110,24 +121,21 @@ export function RegisterForm() {
         thumbnailUrl: res.thumbnailUrl,
       });
 
-      store.setNewEmployee({
+      await store.updateEmployee(employeeId, {
         avatar: res.thumbnailUrl ?? "",
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
         salary: data.salary,
         age: data.age,
-        id: 0,
         full_name: `${data.first_name}  ${data.last_name}`,
+        id: employeeId,
       });
 
-      store.addEmployee();
-      setFile(undefined);
-      form.reset();
       setLoading(false);
       toast({
-        title: "Record successfully saved!",
-        description: "A new employee has been added",
+        title: "Employe updated successfully!",
+        description: "Existing employee data saved",
       });
     }
   }
@@ -141,7 +149,7 @@ export function RegisterForm() {
             className="w-full space-y-6"
           >
             <CardHeader>
-              <CardTitle>Register new Employee</CardTitle>
+              <CardTitle>Update Employee Info</CardTitle>
               <CardDescription>
                 Please fill in the employee info accordingly
               </CardDescription>
@@ -268,7 +276,7 @@ export function RegisterForm() {
               )}
               {!loading && (
                 <Button type="submit" variant={"secondary"}>
-                  Submit
+                  Save
                 </Button>
               )}
             </CardFooter>
