@@ -11,21 +11,6 @@ export type Employee = {
   age: number;
 };
 
-const updateEmployee = (
-  employees: Employee[],
-  id: number,
-  data: Employee
-): Employee[] =>
-  employees.map((employee) => ({
-    ...employee,
-    first_name: employee.id === id ? data.first_name : employee.first_name,
-    last_name: employee.id === id ? data.last_name : employee.last_name,
-    email: employee.id === id ? data.email : employee.email,
-    salary: employee.id === id ? data.salary : employee.salary,
-    age: employee.id === id ? data.age : employee.age,
-    avatar: employee.id === id ? data.avatar : employee.avatar,
-  }));
-
 const removeEmployee = (employees: Employee[], id: number): Employee[] =>
   employees.filter((employee) => employee.id !== id);
 
@@ -51,7 +36,7 @@ type Store = {
   newEmployee: Employee;
   setEmployees: (employees: Employee[]) => void;
   addEmployee: () => void;
-  updateEmployee: (id: number, data: Employee) => void;
+  editEmployee: (data: Employee) => void;
   removeEmployee: (id: number) => void;
   setNewEmployee: (newEmployee: Employee) => void;
 };
@@ -70,7 +55,6 @@ const useStore = create<Store>(
       age: 0,
     },
     setEmployees: (employees: Employee[]) => {
-      console.log("storing employees", employees);
       set((state) => ({
         ...state,
         employees,
@@ -81,10 +65,24 @@ const useStore = create<Store>(
         ...state,
         employees: removeEmployee(state.employees, id),
       })),
-    updateEmployee: (id: number, data: Employee) =>
+    editEmployee: (employee: Employee) =>
       set((state) => ({
-        ...state,
-        employees: updateEmployee(state.employees, id, data),
+        employees: state.employees.map((item) => {
+          if (item.id === employee.id) {
+            return {
+              ...item,
+              avatar: employee.avatar,
+              first_name: employee.first_name,
+              last_name: employee.last_name,
+              full_name: `${employee.first_name} ${employee.last_name}`,
+              email: employee.email,
+              salary: employee.salary,
+              age: employee.age,
+            };
+          } else {
+            return item;
+          }
+        }),
       })),
     setNewEmployee: (newEmployee: Employee) =>
       set((state) => ({

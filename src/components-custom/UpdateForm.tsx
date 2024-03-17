@@ -121,7 +121,7 @@ export function UpdateForm() {
         thumbnailUrl: res.thumbnailUrl,
       });
 
-      await store.updateEmployee(employeeId, {
+      await store.editEmployee({
         avatar: res.thumbnailUrl ?? "",
         first_name: data.first_name,
         last_name: data.last_name,
@@ -129,7 +129,7 @@ export function UpdateForm() {
         salary: data.salary,
         age: data.age,
         full_name: `${data.first_name}  ${data.last_name}`,
-        id: employeeId,
+        id: selectedEmployee.id,
       });
 
       setLoading(false);

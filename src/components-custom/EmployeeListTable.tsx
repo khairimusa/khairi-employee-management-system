@@ -71,7 +71,7 @@ export default function EmployeeListTable() {
           last_name: item.last_name,
           full_name: `${item.first_name} ${item.last_name}`,
           email: item.email,
-          salary: (Math.floor(Math.random() * 10000) + 5000).toLocaleString(),
+          salary: Math.floor(Math.random() * 10000) + 5000,
           age: Math.floor(Math.random() * (60 - 18 + 1)) + 18,
         };
       });
@@ -158,7 +158,6 @@ export default function EmployeeListTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>View</DropdownMenuItem>
                 <DropdownMenuItem>Edit</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => store.removeEmployee(employee.id)}
