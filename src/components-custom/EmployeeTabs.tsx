@@ -21,9 +21,9 @@ export default function EmployeeTabs() {
 
   const selectedTab = searchParams.get("tab") ?? "list";
 
-  useEffect(() => {
-    router.replace(`?tab=${selectedTab}`);
-  }, [selectedTab, router]);
+  // useEffect(() => {
+  //   router.replace(`?tab=${selectedTab}`);
+  // }, [selectedTab, router]);
 
   return (
     <>

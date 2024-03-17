@@ -37,6 +37,7 @@ import {
 } from "@/components/new-york/ui/avatar";
 import useStore, { Employee } from "@/store";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 export default function EmployeeListTable() {
   const t = useTranslations("homePage");
@@ -158,7 +159,14 @@ export default function EmployeeListTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    className="w-full"
+                    href={`/?tab=edit&id=${employee.id}`}
+                  >
+                    Edit
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => store.removeEmployee(employee.id)}
                 >

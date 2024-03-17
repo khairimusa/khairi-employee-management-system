@@ -71,6 +71,7 @@ const useStore = create<Store>(
           if (item.id === employee.id) {
             return {
               ...item,
+              id: employee.id,
               avatar: employee.avatar,
               first_name: employee.first_name,
               last_name: employee.last_name,
